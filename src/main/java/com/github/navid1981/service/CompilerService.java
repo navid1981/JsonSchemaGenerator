@@ -34,8 +34,8 @@ public class CompilerService {
             // This sets up the class path that the compiler will use.
             // I've added the .jar file that contains the DoStuff interface within in it...
             List<String> optionList = new ArrayList<>();
-            optionList.add("-classpath");
-            optionList.add(System.getProperty("java.class.path") + File.pathSeparator + "./Compile.jar");
+//            optionList.add("-classpath");
+//            optionList.add(System.getProperty("java.class.path") + File.pathSeparator + "./Compile.jar");
             File file=new File(path+ "/" + packageName.replace(".","/"));
             List<File> files= Stream.of(file.listFiles()).collect(Collectors.toList());
             Iterable<? extends JavaFileObject> compilationUnit = fileManager.getJavaFileObjectsFromFiles(files);
@@ -50,12 +50,9 @@ public class CompilerService {
         if (task.call()) {
             /** Load and execute *************************************************************************************************/
             System.out.println("Compile Successfully");
-            // Create a new custom class loader, pointing to the directory that contains the compiled
-            // classes, this should point to the top of the package structure!
-            // Load the class from the classloader by name....
-            Class<?> loadedClass = urlClassLoader.loadClass(packageName+".PublisherPayload");
-            // Create a new instance...
-            Object obj = loadedClass.newInstance();
+//            Class<?> loadedClass = urlClassLoader.loadClass(packageName+".PublisherPayload");
+//            // Create a new instance...
+//            Object obj = loadedClass.newInstance();
 
         } else {
             for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
@@ -64,8 +61,8 @@ public class CompilerService {
                         diagnostic.getSource().toUri());
             }
         }
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException exp) {
-        exp.printStackTrace();
+    } catch (RuntimeException exp) {
+            System.out.println(exp.getMessage());
     }finally {
             fileManager.close();
         }
