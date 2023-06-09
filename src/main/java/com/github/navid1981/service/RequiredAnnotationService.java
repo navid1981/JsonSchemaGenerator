@@ -1,10 +1,13 @@
 package com.github.navid1981.service;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.ProtectionDomain;
 import java.util.List;
@@ -37,14 +40,12 @@ public class RequiredAnnotationService {
     @Value("${java.package}")
     private String packageName;
 
-    @Autowired
-    private URLClassLoader urlClassLoader;
-
-    public void addRequiredAnnotation(String className, String fieldName) throws ClassNotFoundException {
+    public void addRequiredAnnotation(String className, String fieldName) throws ClassNotFoundException, MalformedURLException {
         addAnnotationToField(className,fieldName, JsonProperty.class);
     }
 
-    private void addAnnotationToField(String className, String fieldName, Class<?> annotationClass) throws ClassNotFoundException {
+    private void addAnnotationToField(String className, String fieldName, Class<?> annotationClass) throws ClassNotFoundException, MalformedURLException {
+        URLClassLoader urlClassLoader=new URLClassLoader(new URL[]{new File(path).toURI().toURL()});
         Class<?> clazz = urlClassLoader.loadClass(packageName+"."+className);
         ClassPool pool = ClassPool.getDefault();
         CtClass ctClass;

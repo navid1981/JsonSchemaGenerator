@@ -21,9 +21,6 @@ public class CompilerService {
     @Value("${java.package}")
     private String packageName;
 
-    @Autowired
-    private URLClassLoader urlClassLoader;
-
     public void compile() throws IOException {
         StandardJavaFileManager fileManager=null;
         try {
