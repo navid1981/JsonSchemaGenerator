@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class AppController {
     }
 
     @PostMapping(value = "/schema/req",consumes = {"application/json"})
-    public ResponseEntity<String> getSchemaWithRequiredFields(@RequestBody String payload) throws JsonProcessingException, ClassNotFoundException {
+    public ResponseEntity<String> getSchemaWithRequiredFields(@RequestBody String payload) throws JsonProcessingException, ClassNotFoundException, MalformedURLException {
         Map<String,Object> map = new ObjectMapper().readValue(payload, HashMap.class);
         Set<String> set=map.keySet();
         for (String key:set) {
