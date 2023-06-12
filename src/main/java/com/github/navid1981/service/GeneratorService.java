@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class GeneratorService {
@@ -28,13 +30,16 @@ public class GeneratorService {
     @Autowired
     private SchemaService schemaService;
 
+    public static String schema;
+
     public String convertJsonToSchema(String json){
-        String schema=null;
+        schema=null;
         try {
             FileUtils.cleanDirectory(file);
-            javaCreatorService.convertJsonToJavaClass(json,file,packageName,"PublisherPayload");
+            javaCreatorService.convertJsonToJavaClass(json, file, packageName, "PublisherPayload");
             compilerService.compile();
-            schema=schemaService.generateSchema();
+            schema = schemaService.generateSchema(true);
+
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

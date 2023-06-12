@@ -2,6 +2,7 @@ package com.github.navid1981.controller;
 
 import com.github.navid1981.service.GeneratorService;
 import com.github.navid1981.service.RequiredAnnotationService;
+import com.github.navid1981.service.RequiredService;
 import com.github.navid1981.service.SchemaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,9 @@ public class AppController {
     private SchemaService schemaService;
 
     @Autowired
+    private RequiredService requiredService;
+
+    @Autowired
     private RequiredAnnotationService requiredAnnotationService;
 
     @PostMapping(value = "/schema",consumes = {"application/json"})
@@ -42,7 +46,17 @@ public class AppController {
         for (String key:set) {
             requiredAnnotationService.addRequiredAnnotation(key,map.get(key).toString());
         }
-        String result= schemaService.generateSchema();
+        String result= schemaService.generateSchema(false);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/schema/req2",consumes = {"application/json"})
+    public ResponseEntity<String> getSchemaWithRequiredFields2(@RequestBody String payload) throws JsonProcessingException, ClassNotFoundException, MalformedURLException {
+        Map<String,Object> map = new ObjectMapper().readValue(payload, HashMap.class);
+        Set<String> set=map.keySet();
+
+        String result=requiredService.getSchema("/properties/orderDetails/properties/products/items/properties","quantity");
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

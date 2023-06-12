@@ -23,8 +23,11 @@ public class SchemaService {
     @Value("${java.package}")
     private String packageName;
 
-    public String generateSchema() throws ClassNotFoundException, MalformedURLException {
-        URLClassLoader urlClassLoader=new URLClassLoader(new URL[]{new File(path).toURI().toURL()});
+    public static URLClassLoader urlClassLoader;
+
+    public String generateSchema(boolean newGeneration) throws ClassNotFoundException, MalformedURLException {
+        if(newGeneration) urlClassLoader=new URLClassLoader(new URL[]{new File(path).toURI().toURL()});
+
         SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_7, OptionPreset.PLAIN_JSON);
         JacksonModule module = new JacksonModule(JacksonOption.RESPECT_JSONPROPERTY_REQUIRED);
         SchemaGeneratorConfig config = configBuilder.with(module).build();
@@ -32,7 +35,6 @@ public class SchemaService {
         SchemaGenerator generator = new SchemaGenerator(config);
         Class<?> loadedClass = urlClassLoader.loadClass(packageName + ".PublisherPayload");
         JsonNode jsonSchema = generator.generateSchema(loadedClass);
-
         return jsonSchema.toPrettyString();
     }
 }

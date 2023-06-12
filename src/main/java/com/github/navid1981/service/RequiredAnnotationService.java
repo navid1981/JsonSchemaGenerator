@@ -26,6 +26,7 @@ import javassist.bytecode.annotation.Annotation;
 import javassist.bytecode.annotation.BooleanMemberValue;
 import javassist.bytecode.annotation.MemberValue;
 import net.bytebuddy.agent.ByteBuddyAgent;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,22 +41,43 @@ public class RequiredAnnotationService {
     @Value("${java.package}")
     private String packageName;
 
-    public void addRequiredAnnotation(String className, String fieldName) throws ClassNotFoundException, MalformedURLException {
-        addAnnotationToField(className,fieldName, JsonProperty.class);
+    @Autowired
+    private File file;
+
+    public void addRequiredAnnotation(String className, String fieldName) {
+        try {
+            addAnnotationToField(className,fieldName, JsonProperty.class,0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private void addAnnotationToField(String className, String fieldName, Class<?> annotationClass) throws ClassNotFoundException, MalformedURLException {
-        URLClassLoader urlClassLoader=new URLClassLoader(new URL[]{new File(path).toURI().toURL()});
-        Class<?> clazz = urlClassLoader.loadClass(packageName+"."+className);
+    private void addAnnotationToField(String className, String fieldName, Class<?> annotationClass, int retry) throws ClassNotFoundException {
+        Class<?> clazz = SchemaService.urlClassLoader.loadClass(packageName + "." + className);
         ClassPool pool = ClassPool.getDefault();
-        CtClass ctClass;
+        CtClass ctClass=null;
         try {
 //            ctClass = pool.getCtClass(clazz.getName());
-            ctClass = pool.makeClass(new FileInputStream(path+"/"+packageName.replace(".","/")+"/"+className+".class"));
+            ctClass = pool.makeClass(new FileInputStream(path + "/" + packageName.replace(".", "/") + "/" + className + ".class"));
             if (ctClass.isFrozen()) {
                 ctClass.defrost();
             }
-            CtField ctField = ctClass.getDeclaredField(fieldName);
+            CtField ctField = null;
+            try {
+                ctField = ctClass.getDeclaredField(fieldName);
+            } catch (NotFoundException e) {
+                if(retry<=3){
+                    if(retry==0){
+                        addAnnotationToField(className+"__1",fieldName, JsonProperty.class,retry+1);
+                    }else{
+                        className=className.substring(0,className.length()-2)+String.valueOf(retry+1);
+                        addAnnotationToField(className,fieldName, JsonProperty.class,retry+1);
+                    }
+                }else{
+                    throw e;
+                }
+            }
+
             ConstPool constPool = ctClass.getClassFile().getConstPool();
 
 //            Annotation annotation = new Annotation(annotationClass.getName(), constPool);
@@ -67,19 +89,23 @@ public class RequiredAnnotationService {
                 return;
             }
             Annotation annotation = attr.getAnnotation(JsonProperty.class.getName());
-            MemberValue booleanValue=new BooleanMemberValue(true,constPool);
-            annotation.addMemberValue("required",booleanValue);
+            MemberValue booleanValue = new BooleanMemberValue(true, constPool);
+            annotation.addMemberValue("required", booleanValue);
 
 
             attr.addAnnotation(annotation);
 
             retransformClass(clazz, ctClass.toBytecode());
-            if (ctClass.isFrozen()) {
-                ctClass.defrost();
-            }
+
         } catch (NotFoundException | IOException | CannotCompileException e) {
             e.printStackTrace();
+        } finally {
+            ctClass.defrost();
+            ctClass.detach();
+            ctClass=null;
+            System.gc();
         }
+
     }
 
     private AnnotationsAttribute getAnnotationsAttributeFromField(CtField ctField) {
