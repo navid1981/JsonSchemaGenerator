@@ -1,4 +1,4 @@
-package com.github.navid1981;
+package io.github.navid1981;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;

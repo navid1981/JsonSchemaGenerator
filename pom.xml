@@ -8,15 +8,21 @@
         <version>3.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.github.navid1981</groupId>
+    <groupId>io.github.navid1981</groupId>
     <artifactId>JsonSchemaGenerator</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <name>JsonSchemaGenerator</name>
     <description>Json to JsonSchema Convertor</description>
     <url>https://github.com/navid1981/JsonSchemaGenerator</url>
     <scm>
         <url>https://github.com/navid1981/JsonSchemaGenerator.git</url>
     </scm>
+    <developers>
+        <developer>
+            <name>Navid Salehvaziri</name>
+            <email>navid.vaziri@outlook.com</email>
+        </developer>
+    </developers>
     <repositories>
         <repository>
             <id>jitpack</id>
@@ -25,9 +31,9 @@
         </repository>
     </repositories>
     <properties>
-        <java.version>17</java.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -123,7 +129,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
+                <version>1.6.13</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>

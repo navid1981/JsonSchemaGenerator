@@ -1,4 +1,4 @@
-package com.github.navid1981.service;
+package io.github.navid1981.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

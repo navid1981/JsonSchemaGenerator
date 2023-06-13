@@ -1,4 +1,4 @@
-package com.github.navid1981.service;
+package io.github.navid1981.service;
 
 import com.sun.codemodel.JCodeModel;
 import org.jsonschema2pojo.*;

@@ -1,4 +1,4 @@
-package com.github.navid1981.service;
+package io.github.navid1981.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
