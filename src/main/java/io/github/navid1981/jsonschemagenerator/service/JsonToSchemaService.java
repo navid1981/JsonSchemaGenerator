@@ -22,6 +22,7 @@ public class JsonToSchemaService {
             final JsonNode jsonNode = inferrer.inferForSample(mapper.readTree(json));
             String schema=mapper.writeValueAsString(jsonNode);
             System.out.println(schema);
+            GeneratorService.schema=schema;
             return schema;
         } catch (JsonProcessingException e) {
             e.printStackTrace();

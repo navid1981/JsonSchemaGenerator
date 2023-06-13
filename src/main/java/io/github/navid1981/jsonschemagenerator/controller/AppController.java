@@ -35,8 +35,7 @@ public class AppController {
 
     @PostMapping(value = "/schema",consumes = {"application/json"})
     public ResponseEntity<String> getSchema(@RequestBody String payload){
-//        String schema= generatorService.convertJsonToSchema(payload);
-        String schema= jsonToSchemaService.convertor(payload);
+        String schema= generatorService.convertJsonToSchema(payload);
         return new ResponseEntity<>(schema, HttpStatus.OK);
     }
 
@@ -49,6 +48,12 @@ public class AppController {
         }
         String result= schemaService.generateSchema(false);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/schema2",consumes = {"application/json"})
+    public ResponseEntity<String> getSchema2(@RequestBody String payload){
+        String schema= jsonToSchemaService.convertor(payload);
+        return new ResponseEntity<>(schema, HttpStatus.OK);
     }
 
     @PostMapping(value = "/schema/req2")
