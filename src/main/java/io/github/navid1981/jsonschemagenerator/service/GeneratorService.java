@@ -1,4 +1,4 @@
-package io.github.navid1981.service;
+package io.github.navid1981.jsonschemagenerator.service;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;

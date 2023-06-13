@@ -1,4 +1,4 @@
-package io.github.navid1981;
+package io.github.navid1981.jsonschemagenerator;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;

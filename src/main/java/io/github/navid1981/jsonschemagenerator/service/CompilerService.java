@@ -1,13 +1,11 @@
-package io.github.navid1981.service;
+package io.github.navid1981.jsonschemagenerator.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.tools.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

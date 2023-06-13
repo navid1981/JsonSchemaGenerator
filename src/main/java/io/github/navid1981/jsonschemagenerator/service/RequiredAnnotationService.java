@@ -1,4 +1,4 @@
-package io.github.navid1981.service;
+package io.github.navid1981.jsonschemagenerator.service;
 
 import java.io.File;
 import java.io.FileInputStream;
