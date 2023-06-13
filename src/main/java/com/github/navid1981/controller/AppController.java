@@ -50,12 +50,11 @@ public class AppController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/schema/req2",consumes = {"application/json"})
+    @PostMapping(value = "/schema/req2")
     public ResponseEntity<String> getSchemaWithRequiredFields2(@RequestBody String payload) throws JsonProcessingException, ClassNotFoundException, MalformedURLException {
-        Map<String,Object> map = new ObjectMapper().readValue(payload, HashMap.class);
-        Set<String> set=map.keySet();
 
-        String result=requiredService.getSchema("/properties/orderDetails/properties/products/items/properties","quantity");
+        String[] payloads=payload.split("=");
+        String result=requiredService.getSchema(payloads[0],payloads[1]);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

@@ -15,21 +15,21 @@ public class RequiredService {
     public String getSchema(String path, String value) throws JsonProcessingException {
         ObjectNode objectNode = (ObjectNode) new ObjectMapper().readTree(GeneratorService.schema);
 
-        ObjectNode require =mapper.createObjectNode();
+//        ObjectNode require =mapper.createObjectNode();
         ArrayNode arrayNode= mapper.createArrayNode();
         arrayNode.add(value);
-        require.set("required",arrayNode);
+//        require.set("required",arrayNode);
         setJsonPointerValue(objectNode, JsonPointer.compile(path), arrayNode);
-
+        GeneratorService.schema=objectNode.toPrettyString();
         return objectNode.toPrettyString();
     }
 
-    public void setJsonPointerValue2(ObjectNode node, JsonPointer pointer, JsonNode value){
-        node.set("required",value);
-    }
+//    public void setJsonPointerValue2(ObjectNode node, JsonPointer pointer, JsonNode value){
+//        node.set("required",value);
+//    }
     public void setJsonPointerValue(ObjectNode node, JsonPointer pointer, JsonNode value) {
-        JsonPointer parentPointer = pointer.head();
-        JsonNode parentNode = node.at(parentPointer);
+//        JsonPointer parentPointer = pointer.head();
+        JsonNode parentNode = node.at(pointer);
         String fieldName = "required";
 
         if (parentNode.isArray()) {
@@ -44,7 +44,7 @@ public class RequiredService {
             ((ObjectNode) parentNode).set(fieldName, value);
         } else {
             throw new IllegalArgumentException("`" + fieldName + "` can't be set for parent node `"
-                    + parentPointer + "` because parent is not a container but " + parentNode.getNodeType().name());
+                    + pointer + "` because parent is not a container but " + parentNode.getNodeType().name());
         }
     }
 }
