@@ -1,9 +1,6 @@
 package com.github.navid1981.controller;
 
-import com.github.navid1981.service.GeneratorService;
-import com.github.navid1981.service.RequiredAnnotationService;
-import com.github.navid1981.service.RequiredService;
-import com.github.navid1981.service.SchemaService;
+import com.github.navid1981.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +30,13 @@ public class AppController {
     @Autowired
     private RequiredAnnotationService requiredAnnotationService;
 
+    @Autowired
+    private JsonToSchemaService jsonToSchemaService;
+
     @PostMapping(value = "/schema",consumes = {"application/json"})
     public ResponseEntity<String> getSchema(@RequestBody String payload){
-        String schema= generatorService.convertJsonToSchema(payload);
+//        String schema= generatorService.convertJsonToSchema(payload);
+        String schema= jsonToSchemaService.convertor(payload);
         return new ResponseEntity<>(schema, HttpStatus.OK);
     }
 
