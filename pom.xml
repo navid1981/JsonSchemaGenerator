@@ -5,7 +5,7 @@
 
     <groupId>io.github.navid1981</groupId>
     <artifactId>jsonschemagenerator</artifactId>
-    <version>0.9</version>
+    <version>1.0</version>
     <name>jsonschemagenerator</name>
     <description>Json to JsonSchema Convertor</description>
     <url>https://github.com/navid1981/JsonSchemaGenerator</url>

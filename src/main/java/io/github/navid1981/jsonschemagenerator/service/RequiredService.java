@@ -13,7 +13,7 @@ public class RequiredService {
     public static ObjectMapper mapper = new ObjectMapper();
 
     public String getSchema(String path, String value) throws JsonProcessingException {
-        ObjectNode objectNode = (ObjectNode) new ObjectMapper().readTree(GeneratorService.schema);
+        ObjectNode objectNode = (ObjectNode) new ObjectMapper().readTree(JsonToSchemaService.schema);
         ArrayNode arrayNode= mapper.createArrayNode();
         String[] values=value.split(",");
         for(int i=0;i<values.length;i++){
@@ -21,7 +21,7 @@ public class RequiredService {
         }
 
         setJsonPointerValue(objectNode, JsonPointer.compile(path), arrayNode);
-        GeneratorService.schema=objectNode.toPrettyString();
+        JsonToSchemaService.schema=objectNode.toPrettyString();
         return objectNode.toPrettyString();
     }
 

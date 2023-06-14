@@ -21,20 +21,22 @@ public class JsonToSchemaService {
             .setIntegerTypePreference(IntegerTypePreference.NEVER)
             .build();
 
-    @Autowired
-    private RequiredService requiredService;
+    private static RequiredService requiredService=new RequiredService();
+
+    public static String schema;
 
     public String convertor(String json, Map<String, String> map)  {
         try {
-            final JsonNode jsonNode = inferrer.inferForSample(mapper.readTree(json));
-            String schema=mapper.writeValueAsString(jsonNode);
-            System.out.println(schema);
-            GeneratorService.schema=schema;
-            for (String key:map.keySet()) {
-                requiredService.getSchema(key,map.get(key));
-            }
+            synchronized (this) {
+                final JsonNode jsonNode = inferrer.inferForSample(mapper.readTree(json));
+                schema = mapper.writeValueAsString(jsonNode);
+                System.out.println(schema);
 
-            return GeneratorService.schema;
+                for (String key : map.keySet()) {
+                    requiredService.getSchema(key, map.get(key));
+                }
+            }
+            return schema;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
