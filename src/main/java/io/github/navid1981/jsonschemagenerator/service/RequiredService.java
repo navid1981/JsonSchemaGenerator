@@ -15,7 +15,11 @@ public class RequiredService {
     public String getSchema(String path, String value) throws JsonProcessingException {
         ObjectNode objectNode = (ObjectNode) new ObjectMapper().readTree(GeneratorService.schema);
         ArrayNode arrayNode= mapper.createArrayNode();
-        arrayNode.add(value);
+        String[] values=value.split(",");
+        for(int i=0;i<values.length;i++){
+            arrayNode.add(values[i]);
+        }
+
         setJsonPointerValue(objectNode, JsonPointer.compile(path), arrayNode);
         GeneratorService.schema=objectNode.toPrettyString();
         return objectNode.toPrettyString();
