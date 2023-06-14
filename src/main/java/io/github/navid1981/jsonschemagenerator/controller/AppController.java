@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
@@ -51,8 +52,8 @@ public class AppController {
     }
 
     @PostMapping(value = "/schema2",consumes = {"application/json"})
-    public ResponseEntity<String> getSchema2(@RequestBody String payload){
-        String schema= jsonToSchemaService.convertor(payload);
+    public ResponseEntity<String> getSchema2(@RequestBody String payload,@RequestParam Map<String,String> map){
+        String schema= jsonToSchemaService.convertor(payload,map);
         return new ResponseEntity<>(schema, HttpStatus.OK);
     }
 

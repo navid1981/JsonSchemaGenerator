@@ -6,7 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saasquatch.jsonschemainferrer.IntegerTypePreference;
 import com.saasquatch.jsonschemainferrer.JsonSchemaInferrer;
 import com.saasquatch.jsonschemainferrer.SpecVersion;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+
+import java.util.Map;
 
 
 @Service
@@ -17,13 +21,20 @@ public class JsonToSchemaService {
             .setIntegerTypePreference(IntegerTypePreference.NEVER)
             .build();
 
-    public String convertor(String json)  {
+    @Autowired
+    private RequiredService requiredService;
+
+    public String convertor(String json, Map<String, String> map)  {
         try {
             final JsonNode jsonNode = inferrer.inferForSample(mapper.readTree(json));
             String schema=mapper.writeValueAsString(jsonNode);
             System.out.println(schema);
             GeneratorService.schema=schema;
-            return schema;
+            for (String key:map.keySet()) {
+                requiredService.getSchema(key,map.get(key));
+            }
+
+            return GeneratorService.schema;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
